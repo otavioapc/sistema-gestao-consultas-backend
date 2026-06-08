@@ -15,4 +15,28 @@ public class Especialidade {
     @Column(nullable = false)
     private String nome;
 
+    public Especialidade(Integer id, String nome) {
+        this.id = id;
+        this.nome = nome;
+    }
+
+    public Especialidade(){
+
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public @NotBlank(message = "O nome é obrigatório") String getNome() {
+        return nome;
+    }
+
+    public void setNome(@NotBlank(message = "O nome é obrigatório") String nome) {
+        this.nome = nome;
+    }
 }
