@@ -45,6 +45,88 @@ public class Usuario {
 
     private Boolean ativo = true;
 
+    public Usuario(String nome, String cpf, String email, String senha, String perfil, Boolean ativo) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.email = email;
+        this.senha = senha;
+        this.perfil = perfil;
+        this.ativo = ativo;
+    }
 
+    public Usuario(){
 
+    }
+
+    public @NotBlank(message = "O nome é obrigatório") String getNome() {
+        return nome;
+    }
+
+    public void setNome(@NotBlank(message = "O nome é obrigatório") String nome) {
+        this.nome = nome;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public @NotBlank(message = "O CPF é obrigatório") String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(@NotBlank(message = "O CPF é obrigatório") String cpf) {
+        this.cpf = cpf;
+    }
+
+    public @NotBlank(message = "O email é obrigatório") @Email(message = "Email inválido") String getEmail() {
+        return email;
+    }
+
+    public void setEmail(@NotBlank(message = "O email é obrigatório") @Email(message = "Email inválido") String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public LocalDateTime getUltimoAcesso() {
+        return ultimoAcesso;
+    }
+
+    public void setUltimoAcesso(LocalDateTime ultimoAcesso) {
+        this.ultimoAcesso = ultimoAcesso;
+    }
+
+    public @NotBlank String getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(@NotBlank String perfil) {
+        this.perfil = perfil;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
 }
