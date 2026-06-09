@@ -1,5 +1,6 @@
 package br.com.vestaplan.api.entity;
 
+import br.com.vestaplan.api.enums.PerfilUsuario;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -40,17 +41,18 @@ public class Usuario {
     @Column(name = "ultimo_login")
     private LocalDateTime ultimoAcesso;
 
+    @Enumerated(EnumType.STRING)
     @NotBlank
-    private String perfil;
+    private PerfilUsuario perfilUsuario;
 
     private Boolean ativo = true;
 
-    public Usuario(String nome, String cpf, String email, String senha, String perfil, Boolean ativo) {
+    public Usuario(String nome, String cpf, String email, String senha, PerfilUsuario perfil, Boolean ativo) {
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
         this.senha = senha;
-        this.perfil = perfil;
+        this.perfilUsuario = perfil;
         this.ativo = ativo;
     }
 
@@ -114,12 +116,12 @@ public class Usuario {
         this.ultimoAcesso = ultimoAcesso;
     }
 
-    public @NotBlank String getPerfil() {
-        return perfil;
+    public @NotBlank PerfilUsuario getPerfilUsuario() {
+        return perfilUsuario;
     }
 
-    public void setPerfil(@NotBlank String perfil) {
-        this.perfil = perfil;
+    public void setPerfilUsuario(@NotBlank PerfilUsuario perfilUsuario) {
+        this.perfilUsuario = perfilUsuario;
     }
 
     public Boolean getAtivo() {

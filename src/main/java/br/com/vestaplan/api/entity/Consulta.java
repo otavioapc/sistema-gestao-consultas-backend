@@ -1,5 +1,6 @@
 package br.com.vestaplan.api.entity;
 
+import br.com.vestaplan.api.enums.StatusConsulta;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -41,8 +42,9 @@ public class Consulta {
     @Column(name = "data_registro", nullable = false, updatable = false)
     private LocalDateTime dataRegistro;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private StatusConsulta statusConsulta;
 
 
 }
