@@ -43,7 +43,7 @@ public class Usuario {
 
     @Enumerated(EnumType.STRING)
     @NotBlank
-    private PerfilUsuario perfilUsuario;
+    private PerfilUsuario perfil;
 
     private Boolean ativo = true;
 
@@ -52,7 +52,7 @@ public class Usuario {
         this.cpf = cpf;
         this.email = email;
         this.senha = senha;
-        this.perfilUsuario = perfil;
+        this.perfil = perfil;
         this.ativo = ativo;
     }
 
@@ -117,11 +117,11 @@ public class Usuario {
     }
 
     public @NotBlank PerfilUsuario getPerfilUsuario() {
-        return perfilUsuario;
+        return perfil;
     }
 
-    public void setPerfilUsuario(@NotBlank PerfilUsuario perfilUsuario) {
-        this.perfilUsuario = perfilUsuario;
+    public void setPerfilUsuario(@NotBlank PerfilUsuario perfil) {
+        this.perfil = perfil;
     }
 
     public Boolean getAtivo() {
