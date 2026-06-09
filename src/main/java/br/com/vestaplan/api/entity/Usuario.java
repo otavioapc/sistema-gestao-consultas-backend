@@ -42,7 +42,7 @@ public class Usuario {
     private LocalDateTime ultimoAcesso;
 
     @Enumerated(EnumType.STRING)
-    @NotBlank
+    @Column(nullable = false)
     private PerfilUsuario perfil;
 
     private Boolean ativo = true;
@@ -116,11 +116,11 @@ public class Usuario {
         this.ultimoAcesso = ultimoAcesso;
     }
 
-    public @NotBlank PerfilUsuario getPerfilUsuario() {
+    public PerfilUsuario getPerfilUsuario() {
         return perfil;
     }
 
-    public void setPerfilUsuario(@NotBlank PerfilUsuario perfil) {
+    public void setPerfilUsuario(PerfilUsuario perfil) {
         this.perfil = perfil;
     }
 
