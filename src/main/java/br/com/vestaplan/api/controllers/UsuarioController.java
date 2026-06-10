@@ -2,6 +2,7 @@ package br.com.vestaplan.api.controllers;
 
 import br.com.vestaplan.api.dtos.UsuarioDTO;
 import br.com.vestaplan.api.entity.Usuario;
+import br.com.vestaplan.api.enums.PerfilUsuario;
 import br.com.vestaplan.api.services.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,12 @@ public class UsuarioController {
     @GetMapping("/nome")
     public ResponseEntity<List<Usuario>> findUsuarioByName(@RequestParam String nome){
         List <Usuario> usuarios = usuarioService.findUsuarioByName(nome);
+        return ResponseEntity.ok().body(usuarios);
+    }
+
+    @GetMapping("/perfil")
+    public ResponseEntity<List<Usuario>> findUsuarioByPerfil(@RequestParam PerfilUsuario perfil){
+        List <Usuario> usuarios = usuarioService.findUsuarioByPerfil(perfil);
         return ResponseEntity.ok().body(usuarios);
     }
 

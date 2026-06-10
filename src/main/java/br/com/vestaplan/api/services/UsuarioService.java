@@ -2,6 +2,7 @@ package br.com.vestaplan.api.services;
 
 import br.com.vestaplan.api.dtos.UsuarioDTO;
 import br.com.vestaplan.api.entity.Usuario;
+import br.com.vestaplan.api.enums.PerfilUsuario;
 import br.com.vestaplan.api.mappers.UsuarioMapper;
 import br.com.vestaplan.api.repositories.UsuarioRepository;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,10 @@ public class UsuarioService {
 
     public List<Usuario> findUsuarioByName(String name){
         return usuarioRepository.findUsuarioByNomeContainingIgnoreCase(name);
+    }
+
+    public List<Usuario> findUsuarioByPerfil(PerfilUsuario perfil){
+        return usuarioRepository.findByPerfil(perfil);
     }
 
 }
