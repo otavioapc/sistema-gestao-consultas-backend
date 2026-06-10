@@ -5,6 +5,7 @@ import br.com.vestaplan.api.entity.Usuario;
 import br.com.vestaplan.api.enums.PerfilUsuario;
 import br.com.vestaplan.api.mappers.UsuarioMapper;
 import br.com.vestaplan.api.repositories.UsuarioRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -51,6 +52,31 @@ public class UsuarioService {
 
     public List<Usuario> findUsuarioByPerfil(PerfilUsuario perfil){
         return usuarioRepository.findByPerfil(perfil);
+    }
+
+    @Transactional
+    public Usuario update(Integer id, UsuarioDTO dto){
+
+        Usuario atual = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário com o ID " + id + " não foi encontrado!"));
+
+        atual.setNome(dto.nome());
+        atual.setCpf(dto.cpf());
+        atual.setEmail(dto.email());
+        atual.setSenha(dto.senha());
+        atual.setPerfilUsuario(dto.perfil());
+
+        return usuarioRepository.save(atual);
+
+    }
+
+    @Transactional
+    public void deleteById(Integer id) {
+
+        if (!usuarioRepository.existsById(id)) {
+            throw new RuntimeException("Usuário não encontrado para exclusão!");
+        }
+        usuarioRepository.deleteById(id);
     }
 
 }
