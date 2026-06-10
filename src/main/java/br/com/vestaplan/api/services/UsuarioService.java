@@ -5,6 +5,7 @@ import br.com.vestaplan.api.entity.Usuario;
 import br.com.vestaplan.api.mappers.UsuarioMapper;
 import br.com.vestaplan.api.repositories.UsuarioRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -38,5 +39,13 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
+    public Usuario findById(Integer id){
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário com o ID " + id + " não foi encontrado!"));
+    }
+
+    public List<Usuario> findUsuarioByName(String name){
+        return usuarioRepository.findUsuarioByNomeContainingIgnoreCase(name);
+    }
 
 }

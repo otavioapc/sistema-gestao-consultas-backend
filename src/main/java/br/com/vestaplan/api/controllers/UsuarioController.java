@@ -28,6 +28,18 @@ public class UsuarioController {
         return ResponseEntity.ok().body(lista);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Usuario> findUsuarioById(@PathVariable Integer id){
+        Usuario usuario = usuarioService.findById(id);
+        return ResponseEntity.ok().body(usuario);
+    }
+
+    @GetMapping("/nome")
+    public ResponseEntity<List<Usuario>> findUsuarioByName(@RequestParam String nome){
+        List <Usuario> usuarios = usuarioService.findUsuarioByName(nome);
+        return ResponseEntity.ok().body(usuarios);
+    }
+
     @PostMapping
     public ResponseEntity<Usuario> saveUsuario(
             @Valid @RequestBody UsuarioDTO dto) throws URISyntaxException {
@@ -39,5 +51,7 @@ public class UsuarioController {
                 .body(novoUsuario);
 
     }
+
+
 
 }
