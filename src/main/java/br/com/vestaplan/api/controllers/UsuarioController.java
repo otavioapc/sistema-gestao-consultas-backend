@@ -33,6 +33,7 @@ public class UsuarioController {
     public ResponseEntity<Usuario> findUsuarioById(@PathVariable Integer id){
         Usuario usuario = usuarioService.findById(id);
         return ResponseEntity.ok().body(usuario);
+
     }
 
     @GetMapping("/nome")
