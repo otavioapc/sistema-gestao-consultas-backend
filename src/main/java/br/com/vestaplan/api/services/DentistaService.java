@@ -2,8 +2,10 @@ package br.com.vestaplan.api.services;
 
 import br.com.vestaplan.api.dtos.DentistaDTO;
 import br.com.vestaplan.api.entity.Dentista;
+import br.com.vestaplan.api.entity.Especialidade;
 import br.com.vestaplan.api.mappers.DentistaMapper;
 import br.com.vestaplan.api.repositories.DentistaRepository;
+import br.com.vestaplan.api.repositories.EspecialidadeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +16,14 @@ public class DentistaService {
 
     private final DentistaRepository dentistaRepository;
     private final DentistaMapper dentistaMapper;
+    private final EspecialidadeRepository especialidadeRepository;
 
-    public DentistaService(DentistaRepository dentistaRepository, DentistaMapper dentistaMapper) {
+    public DentistaService(DentistaRepository dentistaRepository,
+                           DentistaMapper dentistaMapper,
+                           EspecialidadeRepository especialidadeRepository) {
         this.dentistaRepository = dentistaRepository;
         this.dentistaMapper = dentistaMapper;
+        this.especialidadeRepository = especialidadeRepository;
     }
 
     public Dentista save(DentistaDTO dto) {
@@ -35,6 +41,11 @@ public class DentistaService {
         }
 
         Dentista dentistaEntity = dentistaMapper.toEntity(dto);
+
+        if (dto.especialidadesId() != null && !dto.especialidadesId().isEmpty()) {
+            List<Especialidade> especialidades = especialidadeRepository.findAllById(dto.especialidadesId());
+            dentistaEntity.setEspecialidades(especialidades);
+        }
 
         return dentistaRepository.save(dentistaEntity);
     }
@@ -62,6 +73,11 @@ public class DentistaService {
         atual.setCpf(dto.cpf());
         atual.setEmail(dto.email());
         atual.setCro(dto.cro());
+
+        if (dto.especialidadesId() != null) {
+            List<Especialidade> novasEspecialidades = especialidadeRepository.findAllById(dto.especialidadesId());
+            atual.setEspecialidades(novasEspecialidades);
+        }
 
         return dentistaRepository.save(atual);
     }

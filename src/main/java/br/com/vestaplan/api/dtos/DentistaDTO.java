@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 public record DentistaDTO (
 
         @NotBlank(message = "O nome é obrigatório.")
@@ -18,7 +20,9 @@ public record DentistaDTO (
         String cpf,
 
         @NotBlank(message = "O CRO é obrigatório.")
-        String cro
+        String cro,
+
+        List<Integer> especialidadesId
 
 ){
 }
