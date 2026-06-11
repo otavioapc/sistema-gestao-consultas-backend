@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "dentistas")
@@ -37,6 +39,14 @@ public class Dentista {
     private LocalDateTime dataCriacao;
 
     private Boolean ativo = true;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+          name = "dentista_especialidade",
+          joinColumns = @JoinColumn(name = "id_dentista"),
+          inverseJoinColumns = @JoinColumn(name = "id_especialidade")
+    )
+    private List<Especialidade> especialidades = new ArrayList<>();
 
     public Dentista(String nome, String cpf, String email, String cro, Boolean ativo) {
         this.nome = nome;
@@ -104,5 +114,13 @@ public class Dentista {
 
     public void setCro(@NotBlank(message = "O CRO é obrigatório") String cro) {
         this.cro = cro;
+    }
+
+    public List<Especialidade> getEspecialidades() {
+        return especialidades;
+    }
+
+    public void setEspecialidades(List<Especialidade> especialidades) {
+        this.especialidades = especialidades;
     }
 }
