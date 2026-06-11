@@ -1,0 +1,35 @@
+package br.com.vestaplan.api.dtos;
+
+import br.com.vestaplan.api.enums.StatusConsulta;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+import java.time.LocalDateTime;
+
+public record ConsultaDTO(
+
+        @NotNull(message = "O ID do paciente é obrigatório")
+        Integer idPaciente,
+
+        @NotNull(message = "O ID do dentista é obrigatório")
+        Integer idDentista,
+
+        @NotNull(message = "O ID do usuário é obrigatório")
+        Integer idUsuario,
+
+        @NotBlank(message = "A descrição é obrigatória")
+        String descricao,
+
+        String motivoCancelamento,
+
+        @NotNull(message = "A data de início é obrigatória")
+        LocalDateTime dataInicio,
+
+        @NotNull(message = "A data de fim é obrigatória")
+        LocalDateTime dataFim,
+
+        @NotNull(message = "O status da consulta é obrigatório.")
+        StatusConsulta status
+
+) {
+}
