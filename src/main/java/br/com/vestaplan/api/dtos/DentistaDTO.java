@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record PacienteDTO (
+public record DentistaDTO (
 
         @NotBlank(message = "O nome é obrigatório.")
         String nome,
@@ -17,7 +17,8 @@ public record PacienteDTO (
         @Size(min = 11, max = 14, message = "O CPF deve ter entre 11 e 14 caracteres.")
         String cpf,
 
-        String telefone
-){
+        @NotBlank(message = "O CRO é obrigatório.")
+        String cro
 
+){
 }
