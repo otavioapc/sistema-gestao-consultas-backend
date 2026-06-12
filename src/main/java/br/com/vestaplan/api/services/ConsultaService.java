@@ -15,6 +15,7 @@ import br.com.vestaplan.api.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -116,6 +117,10 @@ public class ConsultaService {
 
         return consultaRepository.save(consulta);
 
+    }
+
+    public List<Consulta> findConsultasFiltradas(Integer idPaciente, Integer idUsuario, Integer idEspecialidade, LocalDateTime dataInicio, LocalDateTime dataFim) {
+        return consultaRepository.findConsultasFiltradas(idPaciente, idUsuario, idEspecialidade, dataInicio, dataFim);
     }
 
 }

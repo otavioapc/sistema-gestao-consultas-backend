@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -30,6 +31,21 @@ public class ConsultaController {
     @GetMapping("/{id}")
     public ResponseEntity<Consulta> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(consultaService.findById(id));
+    }
+
+    @GetMapping("/relatorio")
+    public ResponseEntity<List<Consulta> > getRelatorio(
+            @RequestParam(required = false) Integer idPaciente,
+            @RequestParam(required = false) Integer idUsuario,
+            @RequestParam(required = false) Integer idEspecialidade,
+            @RequestParam(required = false) String dataInicio,
+            @RequestParam(required = false) String dataFim) {
+
+        LocalDateTime inicio = (dataInicio != null) ? LocalDateTime.parse(dataInicio) : null;
+        LocalDateTime fim = (dataFim != null) ? LocalDateTime.parse(dataFim) : null;
+
+        List<Consulta> relatorio = consultaService.findConsultasFiltradas(idPaciente, idUsuario, idEspecialidade, inicio, fim);
+        return ResponseEntity.ok(relatorio);
     }
 
     @PostMapping
@@ -59,5 +75,7 @@ public class ConsultaController {
         consultaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+
 
 }
