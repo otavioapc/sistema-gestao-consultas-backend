@@ -1,10 +1,12 @@
 package br.com.vestaplan.api.services;
 
+import br.com.vestaplan.api.dtos.ConsultaCancelamentoDTO;
 import br.com.vestaplan.api.dtos.ConsultaDTO;
 import br.com.vestaplan.api.entity.Consulta;
 import br.com.vestaplan.api.entity.Dentista;
 import br.com.vestaplan.api.entity.Paciente;
 import br.com.vestaplan.api.entity.Usuario;
+import br.com.vestaplan.api.enums.StatusConsulta;
 import br.com.vestaplan.api.mappers.ConsultaMapper;
 import br.com.vestaplan.api.repositories.ConsultaRepository;
 import br.com.vestaplan.api.repositories.DentistaRepository;
@@ -95,6 +97,27 @@ public class ConsultaService {
             throw new RuntimeException("Consulta não encontrada para exclusão!");
         }
         consultaRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Consulta cancelarConsulta(Integer id, ConsultaCancelamentoDTO dto) {
+
+        Consulta consulta = consultaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Consulta com o ID " + id + " não foi encontrada!"));
+
+        if(consulta.getStatus() == StatusConsulta.FINALIZADA){
+            throw new RuntimeException("Não é possível cancelar uma consulta que já foi finalizada!");
+        }
+
+        if(consulta.getStatus() == StatusConsulta.CANCELADA){
+            throw new RuntimeException("Esta consulta já está cancelada!");
+        }
+
+        consulta.setStatus(StatusConsulta.CANCELADA);
+        consulta.setMotivoCancelamento(dto.motivoCancelamento());
+
+        return consultaRepository.save(consulta);
+
     }
 
 }
