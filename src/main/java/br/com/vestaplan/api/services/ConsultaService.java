@@ -2,6 +2,7 @@ package br.com.vestaplan.api.services;
 
 import br.com.vestaplan.api.dtos.ConsultaCancelamentoDTO;
 import br.com.vestaplan.api.dtos.ConsultaDTO;
+import br.com.vestaplan.api.dtos.ConsultaUpdateDTO;
 import br.com.vestaplan.api.entity.Consulta;
 import br.com.vestaplan.api.entity.Dentista;
 import br.com.vestaplan.api.entity.Paciente;
@@ -67,7 +68,7 @@ public class ConsultaService {
     }
 
     @Transactional
-    public Consulta update(Integer id, ConsultaDTO dto){
+    public Consulta update(Integer id, ConsultaUpdateDTO dto){
 
         Consulta atual = consultaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário com o ID " + id + " não foi encontrado!"));
@@ -85,6 +86,7 @@ public class ConsultaService {
         atual.setDescricao(dto.descricao());
         atual.setDataInicio(dto.dataInicio());
         atual.setDataFim(dto.dataFim());
+        atual.setStatus(dto.status());
 
         return consultaRepository.save(atual);
 

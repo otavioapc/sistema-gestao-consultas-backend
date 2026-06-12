@@ -2,6 +2,7 @@ package br.com.vestaplan.api.controllers;
 
 import br.com.vestaplan.api.dtos.ConsultaCancelamentoDTO;
 import br.com.vestaplan.api.dtos.ConsultaDTO;
+import br.com.vestaplan.api.dtos.ConsultaUpdateDTO;
 import br.com.vestaplan.api.entity.Consulta;
 import br.com.vestaplan.api.services.ConsultaService;
 import jakarta.validation.Valid;
@@ -58,7 +59,7 @@ public class ConsultaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Consulta> atualizar(@PathVariable Integer id, @RequestBody @Valid ConsultaDTO dto) {
+    public ResponseEntity<Consulta> atualizar(@PathVariable Integer id, @RequestBody @Valid ConsultaUpdateDTO dto) {
         Consulta consultaAtualizado = consultaService.update(id, dto);
 
         return ResponseEntity.ok(consultaAtualizado);
