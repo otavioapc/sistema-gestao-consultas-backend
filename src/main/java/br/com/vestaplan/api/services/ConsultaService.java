@@ -8,6 +8,8 @@ import br.com.vestaplan.api.entity.Dentista;
 import br.com.vestaplan.api.entity.Paciente;
 import br.com.vestaplan.api.entity.Usuario;
 import br.com.vestaplan.api.enums.StatusConsulta;
+import br.com.vestaplan.api.exceptions.EntidadeNaoEncontradaException;
+import br.com.vestaplan.api.exceptions.NegocioException;
 import br.com.vestaplan.api.mappers.ConsultaMapper;
 import br.com.vestaplan.api.repositories.ConsultaRepository;
 import br.com.vestaplan.api.repositories.DentistaRepository;
@@ -41,13 +43,13 @@ public class ConsultaService {
     public Consulta save(ConsultaDTO dto){
 
         Paciente paciente = pacienteRepository.findById(dto.idPaciente())
-                .orElseThrow(() -> new RuntimeException("Paciente não encontrado!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Paciente não encontrado!"));
 
         Dentista dentista = dentistaRepository.findById(dto.idDentista())
-                .orElseThrow(() -> new RuntimeException("Dentista não encontrado!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Dentista não encontrado!"));
 
         Usuario usuario = usuarioRepository.findById(dto.idUsuario())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário não encontrado!"));
 
         Consulta consultaEntity = consultaMapper.toEntity(dto);
 
@@ -64,21 +66,21 @@ public class ConsultaService {
 
     public Consulta findById(Integer id){
         return consultaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Consulta não encontrada!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Consulta não encontrada!"));
     }
 
     @Transactional
     public Consulta update(Integer id, ConsultaUpdateDTO dto){
 
         Consulta atual = consultaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário com o ID " + id + " não foi encontrado!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário com o ID " + id + " não foi encontrado!"));
 
         Paciente paciente = pacienteRepository.findById(dto.idPaciente())
-                .orElseThrow(() -> new RuntimeException("Paciente não encontrado!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Paciente não encontrado!"));
         Dentista dentista = dentistaRepository.findById(dto.idDentista())
-                .orElseThrow(() -> new RuntimeException("Dentista não encontrado!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Dentista não encontrado!"));
         Usuario usuario = usuarioRepository.findById(dto.idUsuario())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário não encontrado!"));
 
         atual.setPaciente(paciente);
         atual.setDentista(dentista);
@@ -95,7 +97,7 @@ public class ConsultaService {
     @Transactional
     public void deleteById(Integer id) {
         if (!consultaRepository.existsById(id)) {
-            throw new RuntimeException("Consulta não encontrada para exclusão!");
+            throw new EntidadeNaoEncontradaException("Consulta não encontrada para exclusão!");
         }
         consultaRepository.deleteById(id);
     }
@@ -104,14 +106,14 @@ public class ConsultaService {
     public Consulta cancelarConsulta(Integer id, ConsultaCancelamentoDTO dto) {
 
         Consulta consulta = consultaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Consulta com o ID " + id + " não foi encontrada!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Consulta com o ID " + id + " não foi encontrada!"));
 
         if(consulta.getStatus() == StatusConsulta.FINALIZADA){
-            throw new RuntimeException("Não é possível cancelar uma consulta que já foi finalizada!");
+            throw new NegocioException("Não é possível cancelar uma consulta que já foi finalizada!");
         }
 
         if(consulta.getStatus() == StatusConsulta.CANCELADA){
-            throw new RuntimeException("Esta consulta já está cancelada!");
+            throw new NegocioException("Esta consulta já está cancelada!");
         }
 
         consulta.setStatus(StatusConsulta.CANCELADA);

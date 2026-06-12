@@ -3,6 +3,8 @@ package br.com.vestaplan.api.services;
 import br.com.vestaplan.api.dtos.DentistaDTO;
 import br.com.vestaplan.api.entity.Dentista;
 import br.com.vestaplan.api.entity.Especialidade;
+import br.com.vestaplan.api.exceptions.EntidadeNaoEncontradaException;
+import br.com.vestaplan.api.exceptions.NegocioException;
 import br.com.vestaplan.api.mappers.DentistaMapper;
 import br.com.vestaplan.api.repositories.DentistaRepository;
 import br.com.vestaplan.api.repositories.EspecialidadeRepository;
@@ -29,15 +31,15 @@ public class DentistaService {
     public Dentista save(DentistaDTO dto) {
 
         if (dentistaRepository.existsByEmail(dto.email())) {
-            throw new RuntimeException("Este email já está cadastrado!");
+            throw new NegocioException("Este email já está cadastrado!");
         }
 
         if (dentistaRepository.existsByCpf(dto.cpf())) {
-            throw new RuntimeException("Este CPF já está cadastrado");
+            throw new NegocioException("Este CPF já está cadastrado");
         }
 
         if (dentistaRepository.existsByCro(dto.cro())) {
-            throw new RuntimeException("Este CRO já está cadastrado");
+            throw new NegocioException("Este CRO já está cadastrado");
         }
 
         Dentista dentistaEntity = dentistaMapper.toEntity(dto);
@@ -56,7 +58,7 @@ public class DentistaService {
 
     public Dentista findById(Integer id) {
         return dentistaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Dentista com o ID " + id + " não foi encontrado!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Dentista com o ID " + id + " não foi encontrado!"));
     }
 
     public List<Dentista> findDentistaByName(String name) {
@@ -67,7 +69,7 @@ public class DentistaService {
     public Dentista update(Integer id, DentistaDTO dto) {
 
         Dentista atual = dentistaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Dentista com o ID " + id + " não foi encontrado!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Dentista com o ID " + id + " não foi encontrado!"));
 
         atual.setNome(dto.nome());
         atual.setCpf(dto.cpf());
@@ -86,7 +88,7 @@ public class DentistaService {
     public void delete(Integer id) {
 
         if (!dentistaRepository.existsById(id)) {
-            throw new RuntimeException("Dentista não encontrado para exclusão!");
+            throw new EntidadeNaoEncontradaException("Dentista não encontrado para exclusão!");
         }
         dentistaRepository.deleteById(id);
     }

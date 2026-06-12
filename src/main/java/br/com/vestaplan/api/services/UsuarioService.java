@@ -3,6 +3,8 @@ package br.com.vestaplan.api.services;
 import br.com.vestaplan.api.dtos.UsuarioDTO;
 import br.com.vestaplan.api.entity.Usuario;
 import br.com.vestaplan.api.enums.PerfilUsuario;
+import br.com.vestaplan.api.exceptions.EntidadeNaoEncontradaException;
+import br.com.vestaplan.api.exceptions.NegocioException;
 import br.com.vestaplan.api.mappers.UsuarioMapper;
 import br.com.vestaplan.api.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
@@ -24,11 +26,11 @@ public class UsuarioService {
     public Usuario save(UsuarioDTO dto){
 
         if(usuarioRepository.existsByEmail(dto.email())){
-            throw new RuntimeException("Este email já está cadastrado!");
+            throw new NegocioException("Este email já está cadastrado!");
         }
 
         if(usuarioRepository.existsByCpf(dto.cpf())){
-            throw  new RuntimeException("Este CPF já está cadastrado");
+            throw  new NegocioException("Este CPF já está cadastrado");
         }
 
         Usuario usuarioEntity = usuarioMapper.toEntity(dto);
@@ -42,7 +44,7 @@ public class UsuarioService {
 
     public Usuario findById(Integer id){
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário com o ID " + id + " não foi encontrado!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário com o ID " + id + " não foi encontrado!"));
     }
 
     public List<Usuario> findUsuarioByName(String name){
@@ -57,7 +59,7 @@ public class UsuarioService {
     public Usuario update(Integer id, UsuarioDTO dto){
 
         Usuario atual = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário com o ID " + id + " não foi encontrado!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário com o ID " + id + " não foi encontrado!"));
 
         atual.setNome(dto.nome());
         atual.setCpf(dto.cpf());
@@ -73,7 +75,7 @@ public class UsuarioService {
     public void deleteById(Integer id) {
 
         if (!usuarioRepository.existsById(id)) {
-            throw new RuntimeException("Usuário não encontrado para exclusão!");
+            throw new EntidadeNaoEncontradaException("Usuário não encontrado para exclusão!");
         }
         usuarioRepository.deleteById(id);
     }

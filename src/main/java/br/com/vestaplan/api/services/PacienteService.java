@@ -2,6 +2,8 @@ package br.com.vestaplan.api.services;
 
 import br.com.vestaplan.api.dtos.PacienteDTO;
 import br.com.vestaplan.api.entity.Paciente;
+import br.com.vestaplan.api.exceptions.EntidadeNaoEncontradaException;
+import br.com.vestaplan.api.exceptions.NegocioException;
 import br.com.vestaplan.api.mappers.PacienteMapper;
 import br.com.vestaplan.api.repositories.PacienteRepository;
 import org.springframework.stereotype.Service;
@@ -23,11 +25,11 @@ public class PacienteService {
     public Paciente save(PacienteDTO dto) {
 
         if (pacienteRepository.existsByEmail(dto.email())) {
-            throw new RuntimeException("Este email já está cadastrado!");
+            throw new NegocioException("Este email já está cadastrado!");
         }
 
         if (pacienteRepository.existsByCpf(dto.cpf())) {
-            throw new RuntimeException("Este CPF já está cadastrado");
+            throw new NegocioException("Este CPF já está cadastrado!");
         }
 
         Paciente pacienteEntity = pacienteMapper.toEntity(dto);
@@ -41,7 +43,7 @@ public class PacienteService {
 
     public Paciente findById(Integer id) {
         return pacienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Paciente com o ID " + id + " não foi encontrado!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Paciente com o ID " + id + " não foi encontrado!"));
     }
 
     public List<Paciente> findPacienteByName(String name) {
@@ -52,7 +54,7 @@ public class PacienteService {
     public Paciente update(Integer id, PacienteDTO dto) {
 
         Paciente atual = pacienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Paciente com o ID " + id + " não foi encontrado!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Paciente com o ID " + id + " não foi encontrado!"));
 
         atual.setNome(dto.nome());
         atual.setCpf(dto.cpf());
@@ -66,7 +68,7 @@ public class PacienteService {
     public void deleteById(Integer id) {
 
         if (!pacienteRepository.existsById(id)) {
-            throw new RuntimeException("Paciente não encontrado para exclusão!");
+            throw new EntidadeNaoEncontradaException("Paciente não encontrado para exclusão!");
         }
         pacienteRepository.deleteById(id);
     }

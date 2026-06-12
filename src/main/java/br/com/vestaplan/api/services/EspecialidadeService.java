@@ -2,6 +2,8 @@ package br.com.vestaplan.api.services;
 
 import br.com.vestaplan.api.dtos.EspecialidadeDTO;
 import br.com.vestaplan.api.entity.Especialidade;
+import br.com.vestaplan.api.exceptions.EntidadeNaoEncontradaException;
+import br.com.vestaplan.api.exceptions.NegocioException;
 import br.com.vestaplan.api.mappers.EspecialidadeMapper;
 import br.com.vestaplan.api.repositories.EspecialidadeRepository;
 import jakarta.transaction.Transactional;
@@ -22,7 +24,7 @@ public class EspecialidadeService {
 
     public Especialidade save(EspecialidadeDTO dto) {
         if (especialidadeRepository.existsByNomeIgnoreCase(dto.nome())) {
-            throw new RuntimeException("Esta especialidade já está cadastrada!");
+            throw new NegocioException("Esta especialidade já está cadastrada!");
         }
 
         Especialidade entity = especialidadeMapper.toEntity(dto);
@@ -35,7 +37,7 @@ public class EspecialidadeService {
 
     public Especialidade findById(Integer id) {
         return especialidadeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Especialidade com o ID " + id + " não encontrada!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Especialidade com o ID " + id + " não encontrada!"));
     }
 
     public List<Especialidade> findByName(String nome) {
@@ -45,7 +47,7 @@ public class EspecialidadeService {
     @Transactional
     public Especialidade update(Integer id, EspecialidadeDTO dto) {
         Especialidade atual = especialidadeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Especialidade com o ID " + id + " não encontrada!"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Especialidade com o ID " + id + " não encontrada!"));
 
         atual.setNome(dto.nome());
         return especialidadeRepository.save(atual);
@@ -54,7 +56,7 @@ public class EspecialidadeService {
     @Transactional
     public void delete(Integer id) {
         if (!especialidadeRepository.existsById(id)) {
-            throw new RuntimeException("Especialidade não encontrada para exclusão!");
+            throw new EntidadeNaoEncontradaException("Especialidade não encontrada para exclusão!");
         }
         especialidadeRepository.deleteById(id);
     }
