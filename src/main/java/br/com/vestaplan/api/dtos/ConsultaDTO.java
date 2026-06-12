@@ -20,16 +20,11 @@ public record ConsultaDTO(
         @NotBlank(message = "A descrição é obrigatória")
         String descricao,
 
-        String motivoCancelamento,
-
         @NotNull(message = "A data de início é obrigatória")
         LocalDateTime dataInicio,
 
         @NotNull(message = "A data de fim é obrigatória")
-        LocalDateTime dataFim,
-
-        @NotNull(message = "O status da consulta é obrigatório.")
-        StatusConsulta status
+        LocalDateTime dataFim
 
 ) {
 }

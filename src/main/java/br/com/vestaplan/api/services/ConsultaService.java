@@ -82,10 +82,8 @@ public class ConsultaService {
         atual.setDentista(dentista);
         atual.setUsuario(usuario);
         atual.setDescricao(dto.descricao());
-        atual.setMotivoCancelamento(dto.motivoCancelamento());
         atual.setDataInicio(dto.dataInicio());
         atual.setDataFim(dto.dataFim());
-        atual.setStatus(dto.status());
 
         return consultaRepository.save(atual);
 

@@ -46,6 +46,11 @@ public class Consulta {
     @Column(nullable = false)
     private StatusConsulta status;
 
+    @PrePersist
+    public void consultaAgendada() {
+        this.setStatus(StatusConsulta.AGENDADA);
+    }
+
     public Consulta(Paciente paciente, Dentista dentista, Usuario usuario, String descricao, String motivoCancelamento, LocalDateTime dataInicio, LocalDateTime dataFim, StatusConsulta status) {
         this.paciente = paciente;
         this.dentista = dentista;

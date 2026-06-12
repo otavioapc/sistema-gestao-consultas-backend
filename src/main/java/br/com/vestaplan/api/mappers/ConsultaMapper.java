@@ -12,10 +12,8 @@ public class ConsultaMapper {
         Consulta consulta = new Consulta();
 
         consulta.setDescricao(dto.descricao());
-        consulta.setMotivoCancelamento(dto.motivoCancelamento());
         consulta.setDataInicio(dto.dataInicio());
         consulta.setDataFim(dto.dataFim());
-        consulta.setStatus(dto.status());
 
         return consulta;
 
