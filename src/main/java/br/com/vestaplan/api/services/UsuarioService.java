@@ -7,6 +7,7 @@ import br.com.vestaplan.api.exceptions.EntidadeNaoEncontradaException;
 import br.com.vestaplan.api.exceptions.NegocioException;
 import br.com.vestaplan.api.mappers.UsuarioMapper;
 import br.com.vestaplan.api.repositories.UsuarioRepository;
+import br.com.vestaplan.api.utils.TextoUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,10 @@ public class UsuarioService {
 
     public Usuario save(UsuarioDTO dto){
 
+        String nomeLimpo = TextoUtils.higienizarNome(dto.nome());
+        String cpfLimpo = TextoUtils.limparMascaras(dto.cpf());
+        String emailLimpo = dto.email().trim().toLowerCase();
+
         if(usuarioRepository.existsByEmail(dto.email())){
             throw new NegocioException("Este email já está cadastrado!");
         }
@@ -34,6 +39,10 @@ public class UsuarioService {
         }
 
         Usuario usuarioEntity = usuarioMapper.toEntity(dto);
+
+        usuarioEntity.setNome(nomeLimpo);
+        usuarioEntity.setCpf(cpfLimpo);
+        usuarioEntity.setEmail(emailLimpo);
 
         return usuarioRepository.save(usuarioEntity);
     }
@@ -61,9 +70,9 @@ public class UsuarioService {
         Usuario atual = usuarioRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário com o ID " + id + " não foi encontrado!"));
 
-        atual.setNome(dto.nome());
-        atual.setCpf(dto.cpf());
-        atual.setEmail(dto.email());
+        atual.setNome(TextoUtils.higienizarNome(dto.nome()));
+        atual.setCpf(TextoUtils.limparMascaras(dto.cpf()));
+        atual.setEmail(TextoUtils.limparMascaras(dto.email()));
         atual.setSenha(dto.senha());
         atual.setPerfilUsuario(dto.perfil());
 

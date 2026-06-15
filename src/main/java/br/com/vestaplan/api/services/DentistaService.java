@@ -8,6 +8,7 @@ import br.com.vestaplan.api.exceptions.NegocioException;
 import br.com.vestaplan.api.mappers.DentistaMapper;
 import br.com.vestaplan.api.repositories.DentistaRepository;
 import br.com.vestaplan.api.repositories.EspecialidadeRepository;
+import br.com.vestaplan.api.utils.TextoUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,11 @@ public class DentistaService {
 
     public Dentista save(DentistaDTO dto) {
 
+        String nomeLimpo = TextoUtils.higienizarNome(dto.nome());
+        String cpfLimpo = TextoUtils.limparMascaras(dto.cpf());
+        String emailLimpo = dto.email().trim().toLowerCase();
+        String croLimpo = TextoUtils.limparMascaras(dto.cro());
+
         if (dentistaRepository.existsByEmail(dto.email())) {
             throw new NegocioException("Este email já está cadastrado!");
         }
@@ -43,6 +49,11 @@ public class DentistaService {
         }
 
         Dentista dentistaEntity = dentistaMapper.toEntity(dto);
+
+        dentistaEntity.setNome(nomeLimpo);
+        dentistaEntity.setCpf(cpfLimpo);
+        dentistaEntity.setEmail(emailLimpo);
+        dentistaEntity.setCro(croLimpo);
 
         if (dto.especialidadesId() != null && !dto.especialidadesId().isEmpty()) {
             List<Especialidade> especialidades = especialidadeRepository.findAllById(dto.especialidadesId());
@@ -71,10 +82,10 @@ public class DentistaService {
         Dentista atual = dentistaRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Dentista com o ID " + id + " não foi encontrado!"));
 
-        atual.setNome(dto.nome());
-        atual.setCpf(dto.cpf());
-        atual.setEmail(dto.email());
-        atual.setCro(dto.cro());
+        atual.setNome(TextoUtils.higienizarNome(dto.nome()));
+        atual.setCpf(TextoUtils.limparMascaras(dto.cpf()));
+        atual.setEmail(TextoUtils.limparMascaras(dto.email()));
+        atual.setCro(TextoUtils.limparMascaras(dto.cro()));
 
         if (dto.especialidadesId() != null) {
             List<Especialidade> novasEspecialidades = especialidadeRepository.findAllById(dto.especialidadesId());
