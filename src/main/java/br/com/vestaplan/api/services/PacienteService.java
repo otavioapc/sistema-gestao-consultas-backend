@@ -6,6 +6,7 @@ import br.com.vestaplan.api.exceptions.EntidadeNaoEncontradaException;
 import br.com.vestaplan.api.exceptions.NegocioException;
 import br.com.vestaplan.api.mappers.PacienteMapper;
 import br.com.vestaplan.api.repositories.PacienteRepository;
+import br.com.vestaplan.api.utils.TextoUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,11 @@ public class PacienteService {
 
     public Paciente save(PacienteDTO dto) {
 
+        String nomeLimpo = TextoUtils.higienizarNome(dto.nome());
+        String cpfLimpo = TextoUtils.limparMascaras(dto.cpf());
+        String emailLimpo = dto.email().trim().toLowerCase();
+        String telefoneLimpo = TextoUtils.limparMascaras(dto.telefone());
+
         if (pacienteRepository.existsByEmail(dto.email())) {
             throw new NegocioException("Este email já está cadastrado!");
         }
@@ -33,6 +39,11 @@ public class PacienteService {
         }
 
         Paciente pacienteEntity = pacienteMapper.toEntity(dto);
+
+        pacienteEntity.setNome(nomeLimpo);
+        pacienteEntity.setCpf(cpfLimpo);
+        pacienteEntity.setEmail(emailLimpo);
+        pacienteEntity.setTelefone(telefoneLimpo);
 
         return pacienteRepository.save(pacienteEntity);
     }
@@ -56,10 +67,10 @@ public class PacienteService {
         Paciente atual = pacienteRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Paciente com o ID " + id + " não foi encontrado!"));
 
-        atual.setNome(dto.nome());
-        atual.setCpf(dto.cpf());
-        atual.setEmail(dto.email());
-        atual.setTelefone(dto.telefone());
+        atual.setNome(TextoUtils.higienizarNome(dto.nome()));
+        atual.setCpf(TextoUtils.limparMascaras(dto.cpf()));
+        atual.setEmail(dto.email().trim().toLowerCase());
+        atual.setTelefone(TextoUtils.limparMascaras(dto.telefone()));
 
         return pacienteRepository.save(atual);
     }
