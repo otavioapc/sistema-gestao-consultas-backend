@@ -58,7 +58,7 @@ public class PacienteService {
     }
 
     public List<Paciente> findPacienteByName(String name) {
-        return pacienteRepository.findPacienteByNomeContainingIgnoreCase(name);
+        return pacienteRepository.findByName(TextoUtils.higienizarNome(name));
     }
 
     @Transactional

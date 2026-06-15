@@ -57,7 +57,7 @@ public class UsuarioService {
     }
 
     public List<Usuario> findUsuarioByName(String name){
-        return usuarioRepository.findUsuarioByNomeContainingIgnoreCase(name);
+        return usuarioRepository.findByName(TextoUtils.higienizarNome(name));
     }
 
     public List<Usuario> findUsuarioByPerfil(PerfilUsuario perfil){

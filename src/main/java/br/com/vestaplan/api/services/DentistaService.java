@@ -73,7 +73,7 @@ public class DentistaService {
     }
 
     public List<Dentista> findDentistaByName(String name) {
-        return dentistaRepository.findDentistaByNomeContainingIgnoreCase(name);
+        return dentistaRepository.findByName(TextoUtils.higienizarNome(name));
     }
 
     @Transactional
