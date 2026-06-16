@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
@@ -18,5 +19,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> findByName(@Param("nome") String name);
 
     List<Usuario> findByPerfil(PerfilUsuario perfil);
+
+    Optional<Usuario> findByEmail(String email);
 
 }
