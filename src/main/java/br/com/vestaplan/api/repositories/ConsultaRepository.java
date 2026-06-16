@@ -10,6 +10,16 @@ import java.util.List;
 
 public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
 
+    @Query("SELECT COUNT(c) > 0 FROM Consulta c WHERE c.dentista.id = :dentistaId " +
+            "AND c.status <> StatusConsulta.CANCELADA " +
+            "AND (:id IS NULL OR c.id <> :id) " +
+            "AND (:inicio < c.dataFim AND :fim > c.dataInicio)")
+    boolean existsByDentistaIdAndHorarioConflitante(
+            @Param("dentistaId") Integer dentistaId,
+            @Param("inicio") LocalDateTime inicio,
+            @Param("fim") LocalDateTime fim,
+            @Param("id") Integer id
+    );
     @Query(value = "SELECT c.* FROM consultas c " +
             "JOIN dentistas d ON c.id_dentista = d.id " +
             "LEFT JOIN dentista_especialidade de ON d.id = de.id_dentista " +

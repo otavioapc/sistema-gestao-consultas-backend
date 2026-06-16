@@ -44,12 +44,12 @@ public class ConsultaService {
 
         Paciente paciente = pacienteRepository.findById(dto.idPaciente())
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Paciente não encontrado!"));
-
         Dentista dentista = dentistaRepository.findById(dto.idDentista())
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Dentista não encontrado!"));
-
         Usuario usuario = usuarioRepository.findById(dto.idUsuario())
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário não encontrado!"));
+
+        validarRegrasDeHorario(dto.idDentista(), dto.dataInicio(), dto.dataFim(), null);
 
         Consulta consultaEntity = consultaMapper.toEntity(dto);
 
@@ -81,6 +81,8 @@ public class ConsultaService {
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Dentista não encontrado!"));
         Usuario usuario = usuarioRepository.findById(dto.idUsuario())
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário não encontrado!"));
+
+        validarRegrasDeHorario(dto.idDentista(), dto.dataInicio(), dto.dataFim(), id);
 
         atual.setPaciente(paciente);
         atual.setDentista(dentista);
@@ -125,6 +127,28 @@ public class ConsultaService {
 
     public List<Consulta> findConsultasFiltradas(Integer idPaciente, Integer idUsuario, Integer idEspecialidade, LocalDateTime dataInicio, LocalDateTime dataFim) {
         return consultaRepository.findConsultasFiltradas(idPaciente, idUsuario, idEspecialidade, dataInicio, dataFim);
+    }
+
+    //Método validar regra de negócio
+    private void validarRegrasDeHorario(Integer idDentista, LocalDateTime inicio, LocalDateTime fim, Integer idConsulta) {
+
+        //Não permitir agendamento em datas passadas
+        if (inicio.isBefore(LocalDateTime.now())) {
+            throw new NegocioException("Não é possível agendar ou alterar uma consulta para datas/horários passados.");
+        }
+
+        //O horário final da consulta deve ser após o horário inicial
+        if (!fim.isAfter(inicio)) {
+            throw new NegocioException("O horário final da consulta deve ser após o horário inicial.");
+        }
+
+        //Não permitir conflito de horário para o mesmo dentista
+        boolean dentistaOcupado = consultaRepository.existsByDentistaIdAndHorarioConflitante(
+                idDentista, inicio, fim, idConsulta
+        );
+        if (dentistaOcupado) {
+            throw new NegocioException("O dentista já possui uma consulta ativa agendada neste horário.");
+        }
     }
 
 }
