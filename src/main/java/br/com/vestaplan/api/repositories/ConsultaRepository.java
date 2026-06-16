@@ -1,6 +1,8 @@
 package br.com.vestaplan.api.repositories;
 
 import br.com.vestaplan.api.entity.Consulta;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,4 +39,5 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
             @Param("dataFim") LocalDateTime dataFim
     );
 
+    List<Consulta> findByDentistaEmail(String email);
 }

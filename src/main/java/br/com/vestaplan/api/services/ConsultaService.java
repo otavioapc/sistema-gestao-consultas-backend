@@ -7,6 +7,7 @@ import br.com.vestaplan.api.entity.Consulta;
 import br.com.vestaplan.api.entity.Dentista;
 import br.com.vestaplan.api.entity.Paciente;
 import br.com.vestaplan.api.entity.Usuario;
+import br.com.vestaplan.api.enums.PerfilUsuario;
 import br.com.vestaplan.api.enums.StatusConsulta;
 import br.com.vestaplan.api.exceptions.EntidadeNaoEncontradaException;
 import br.com.vestaplan.api.exceptions.NegocioException;
@@ -16,6 +17,7 @@ import br.com.vestaplan.api.repositories.DentistaRepository;
 import br.com.vestaplan.api.repositories.PacienteRepository;
 import br.com.vestaplan.api.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -61,7 +63,14 @@ public class ConsultaService {
     }
 
     public List<Consulta> getConsultas(){
-        return consultaRepository.findAll();
+
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (usuarioLogado.getPerfilUsuario() == PerfilUsuario.ADMIN) {
+            return consultaRepository.findAll();
+        }
+
+        return consultaRepository.findByDentistaEmail(usuarioLogado.getEmail());
     }
 
     public Consulta findById(Integer id){
