@@ -9,6 +9,7 @@ import br.com.vestaplan.api.mappers.UsuarioMapper;
 import br.com.vestaplan.api.repositories.UsuarioRepository;
 import br.com.vestaplan.api.utils.TextoUtils;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +19,12 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper) {
+    public UsuarioService(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioMapper = usuarioMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Usuario save(UsuarioDTO dto){
@@ -43,6 +46,9 @@ public class UsuarioService {
         usuarioEntity.setNome(nomeLimpo);
         usuarioEntity.setCpf(cpfLimpo);
         usuarioEntity.setEmail(emailLimpo);
+
+        String senhaCriptografada = passwordEncoder.encode(dto.senha());
+        usuarioEntity.setSenha(senhaCriptografada);
 
         return usuarioRepository.save(usuarioEntity);
     }
