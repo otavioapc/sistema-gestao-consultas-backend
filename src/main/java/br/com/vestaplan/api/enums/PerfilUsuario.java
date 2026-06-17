@@ -1,6 +1,6 @@
-package br.com.vestaplan.api.enums;
+    package br.com.vestaplan.api.enums;
 
-public enum PerfilUsuario {
-    ADMIN,
-    DENTISTA
-}
+    public enum PerfilUsuario {
+        ADMIN,
+        DENTISTA
+    }

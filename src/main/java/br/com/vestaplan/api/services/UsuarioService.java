@@ -78,8 +78,8 @@ public class UsuarioService {
 
         atual.setNome(TextoUtils.higienizarNome(dto.nome()));
         atual.setCpf(TextoUtils.limparMascaras(dto.cpf()));
-        atual.setEmail(TextoUtils.limparMascaras(dto.email()));
-        atual.setSenha(dto.senha());
+        atual.setEmail(dto.email().trim().toLowerCase());
+        atual.setSenha(passwordEncoder.encode(dto.senha()));
         atual.setPerfilUsuario(dto.perfil());
 
         return usuarioRepository.save(atual);
