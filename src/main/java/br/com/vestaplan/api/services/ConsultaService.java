@@ -48,8 +48,13 @@ public class ConsultaService {
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Paciente não encontrado!"));
         Dentista dentista = dentistaRepository.findById(dto.idDentista())
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Dentista não encontrado!"));
-        Usuario usuario = usuarioRepository.findById(dto.idUsuario())
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário não encontrado!"));
+
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new EntidadeNaoEncontradaException("Usuário não está autenticado no sistema!");
+        }
+
+        Usuario usuarioLogado = (Usuario) authentication.getPrincipal();
 
         validarRegrasDeHorario(dto.idDentista(), dto.dataInicio(), dto.dataFim(), null);
 
@@ -57,7 +62,7 @@ public class ConsultaService {
 
         consultaEntity.setPaciente(paciente);
         consultaEntity.setDentista(dentista);
-        consultaEntity.setUsuario(usuario);
+        consultaEntity.setUsuario(usuarioLogado);
 
         return consultaRepository.save(consultaEntity);
     }
@@ -88,14 +93,19 @@ public class ConsultaService {
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Paciente não encontrado!"));
         Dentista dentista = dentistaRepository.findById(dto.idDentista())
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Dentista não encontrado!"));
-        Usuario usuario = usuarioRepository.findById(dto.idUsuario())
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário não encontrado!"));
+
+
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new EntidadeNaoEncontradaException("Usuário não está autenticado no sistema!");
+        }
+        Usuario usuarioLogado = (Usuario) authentication.getPrincipal();
 
         validarRegrasDeHorario(dto.idDentista(), dto.dataInicio(), dto.dataFim(), id);
 
         atual.setPaciente(paciente);
         atual.setDentista(dentista);
-        atual.setUsuario(usuario);
+        atual.setUsuario(usuarioLogado);
         atual.setDescricao(dto.descricao());
         atual.setDataInicio(dto.dataInicio());
         atual.setDataFim(dto.dataFim());
