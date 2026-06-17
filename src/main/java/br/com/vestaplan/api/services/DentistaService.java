@@ -84,7 +84,7 @@ public class DentistaService {
 
         atual.setNome(TextoUtils.higienizarNome(dto.nome()));
         atual.setCpf(TextoUtils.limparMascaras(dto.cpf()));
-        atual.setEmail(TextoUtils.limparMascaras(dto.email()));
+        atual.setEmail(dto.email().trim().toLowerCase());
         atual.setCro(TextoUtils.limparMascaras(dto.cro()));
 
         if (dto.especialidadesId() != null) {

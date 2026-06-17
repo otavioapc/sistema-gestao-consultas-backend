@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers("/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers("/dentistas/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
